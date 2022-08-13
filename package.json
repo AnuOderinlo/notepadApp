@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "npm run compile",
     "start": "node ./bin/www",
     "dev": "ts-node-dev --respawn ./bin/www",
     "serve": "nodemon ./bin/www",
-    "compile": "tsc -w"
+    "compile": "tsc"
   },
   "dependencies": {
     "axios": "^0.27.2",
