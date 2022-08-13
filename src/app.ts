@@ -13,6 +13,14 @@ import db from "./config/database.config";
 
 const app = express();
 
+db.sync()
+  .then(() => {
+    console.log("Database succesffully created");
+  })
+  .catch((error) => {
+    console.log("Something went wrong");
+  });
+
 // view engine setup
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "pug");
@@ -50,11 +58,4 @@ app.use(function (
   res.render("error");
 });
 
-db.sync()
-  .then(() => {
-    console.log("Database succesffully created");
-  })
-  .catch((error) => {
-    console.log("Something went wrong");
-  });
 export default app;

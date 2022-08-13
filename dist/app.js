@@ -13,6 +13,13 @@ const notes_1 = __importDefault(require("./routes/notes"));
 const viewRoute_1 = __importDefault(require("./routes/viewRoute"));
 const database_config_1 = __importDefault(require("./config/database.config"));
 const app = (0, express_1.default)();
+database_config_1.default.sync()
+    .then(() => {
+    console.log("Database succesffully created");
+})
+    .catch((error) => {
+    console.log("Something went wrong");
+});
 // view engine setup
 app.set("views", path_1.default.join(__dirname, "../views"));
 app.set("view engine", "pug");
@@ -38,12 +45,5 @@ app.use(function (err, req, res, next) {
     // render the error page
     res.status(err.status || 500);
     res.render("error");
-});
-database_config_1.default.sync()
-    .then(() => {
-    console.log("Database succesffully created");
-})
-    .catch((error) => {
-    console.log("Something went wrong");
 });
 exports.default = app;
