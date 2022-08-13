@@ -6,7 +6,6 @@ const noteModel_1 = require("../models/noteModel");
 async function getHomePage(req, res, next) {
     // Get all notes from db
     const notes = await noteModel_1.NoteSchema.findAll();
-    console.log(req.cookies.jwt.id);
     res.status(200).render("index", {
         title: "All notes",
         notes,

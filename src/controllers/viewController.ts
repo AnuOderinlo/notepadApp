@@ -9,7 +9,6 @@ export async function getHomePage(
 ) {
   // Get all notes from db
   const notes = await NoteSchema.findAll();
-  console.log(req.cookies.jwt.id);
 
   res.status(200).render("index", {
     title: "All notes",
