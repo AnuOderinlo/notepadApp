@@ -12,12 +12,10 @@ export async function auth(
     const authorization = req.headers.authorization;
 
     let token;
-    if (req.headers.authorization) {
-      token = authorization?.slice(7, authorization.length) as string;
-    }else {
-      return res.status(401).json({
-        Error: "Kindly sign in as a user",
-      });
+    if (req.cookies.jwt) {
+      token = req.cookies.jwt;
+    } else {
+      return res.redirect("/login");
     }
 
     // if the token is present in cookies

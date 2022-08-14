@@ -8,7 +8,7 @@ import {
   getEditNotePage,
   getDeleteNotePage,
 } from "../controllers/viewController";
-import { auth } from "../middleware/authenticate";
+import { auth } from "../middleware/authenticateProd";
 const router = express.Router();
 
 // Template Route
