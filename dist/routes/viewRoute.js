@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const viewController_1 = require("../controllers/viewController");
 const authenticateProd_1 = require("../middleware/authenticateProd");
+// import { auth } from "../middleware/auth";
 const router = express_1.default.Router();
 // Template Route
 router.get("/", viewController_1.getHomePage);

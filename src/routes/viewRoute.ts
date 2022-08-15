@@ -9,6 +9,7 @@ import {
   getDeleteNotePage,
 } from "../controllers/viewController";
 import { auth } from "../middleware/authenticateProd";
+// import { auth } from "../middleware/auth";
 const router = express.Router();
 
 // Template Route

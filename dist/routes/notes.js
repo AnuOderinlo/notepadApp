@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const noteController_1 = require("../controllers/noteController");
-const authenticate_1 = require("../middleware/authenticate");
+const authenticateProd_1 = require("../middleware/authenticateProd");
 const router = express_1.default.Router();
 /* GET users listing. */
 router.get("/", function (req, res, next) {
@@ -17,7 +17,7 @@ router.get("/", function (req, res, next) {
 });
 router.get("/notes/:id", noteController_1.getNote);
 router.get("/notes", noteController_1.getAllNotes);
-router.post("/notes", authenticate_1.auth, noteController_1.createNote);
-router.put("/notes/:id", authenticate_1.auth, noteController_1.updateNote);
-router.delete("/notes/:id", authenticate_1.auth, noteController_1.deleteNote);
+router.post("/notes", authenticateProd_1.auth, noteController_1.createNote);
+router.put("/notes/:id", authenticateProd_1.auth, noteController_1.updateNote);
+router.delete("/notes/:id", authenticateProd_1.auth, noteController_1.deleteNote);
 exports.default = router;

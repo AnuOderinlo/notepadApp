@@ -6,7 +6,7 @@ import {
   updateNote,
   deleteNote,
 } from "../controllers/noteController";
-import { auth } from "../middleware/authenticate";
+import { auth } from "../middleware/authenticateProd";
 const router = express.Router();
 
 /* GET users listing. */
