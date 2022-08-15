@@ -20,7 +20,7 @@ html(lang='en')
                   h5.modal-title.text-white Add Notes
                   //- button.close.text-white(type='button' data-dismiss='modal' aria-label='Close')
                     span(aria-hidden='true') ×
-                .modal-body
+                .modal-body      
                   .notes-box
                     .notes-content
                       
@@ -37,7 +37,8 @@ html(lang='en')
                 .modal-footer
                   button#btn-n-save.float-left.btn.btn-success(style='display: none;') Save
                   |  
-                  button.btn.btn-danger(data-dismiss='modal') Discard
+                  //- button.btn.btn-danger(data-dismiss='modal')
+                  a.btn.btn-danger(href="/dashboard")  Discard
                   |  
                   button#btn-n-add.btn.btn-info(type='submit') Add
 

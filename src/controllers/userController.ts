@@ -232,7 +232,7 @@ export async function loginUser(
     }
 
     if (validUser) {
-      console.log(req.cookies);
+      // console.log(req.cookies);
 
       return res
         .cookie("jwt", token, {
@@ -252,4 +252,11 @@ export async function loginUser(
       route: "/login",
     });
   }
+}
+
+export function logoutUser(req: Request, res: Response, next: NextFunction) {
+  return res
+    .clearCookie("jwt")
+    .status(200)
+    .json({ message: "Successfully logged out 😏 🍀" });
 }

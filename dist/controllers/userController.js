@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.deleteUser = exports.updateUser = exports.getUser = exports.getAllUsers = exports.createUser = void 0;
+exports.logoutUser = exports.loginUser = exports.deleteUser = exports.updateUser = exports.getUser = exports.getAllUsers = exports.createUser = void 0;
 const uuid_1 = require("uuid");
 const userModel_1 = require("../models/userModel");
 const utils_1 = require("../utility/utils");
@@ -205,7 +205,7 @@ async function loginUser(req, res, next) {
             });
         }
         if (validUser) {
-            console.log(req.cookies);
+            // console.log(req.cookies);
             return res
                 .cookie("jwt", token, {
                 httpOnly: true,
@@ -227,3 +227,10 @@ async function loginUser(req, res, next) {
     }
 }
 exports.loginUser = loginUser;
+function logoutUser(req, res, next) {
+    return res
+        .clearCookie("jwt")
+        .status(200)
+        .json({ message: "Successfully logged out 😏 🍀" });
+}
+exports.logoutUser = logoutUser;
