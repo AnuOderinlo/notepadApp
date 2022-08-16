@@ -6,7 +6,9 @@ import {
   updateUser,
   deleteUser,
   loginUser,
+  logoutUser,
 } from "../controllers/userController";
+import { auth } from "../middleware/authenticate";
 const router = express.Router();
 
 /* GET users listing. */
@@ -24,5 +26,6 @@ router.post("/users", createUser);
 router.put("/users/:id", updateUser);
 router.delete("/users/:id", deleteUser);
 router.post("/login", loginUser);
+router.get("/logout", auth, logoutUser);
 
 export default router;

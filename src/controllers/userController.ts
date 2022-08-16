@@ -253,3 +253,15 @@ export async function loginUser(
     });
   }
 }
+
+export async function logoutUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  // const id = uuidv4();
+  return res
+    .clearCookie("jwt")
+    .status(200)
+    .json({ message: "Successfully logged out 😏 🍀" });
+}
