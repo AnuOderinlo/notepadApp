@@ -228,7 +228,6 @@ async function loginUser(req, res, next) {
 }
 exports.loginUser = loginUser;
 async function logoutUser(req, res, next) {
-    // const id = uuidv4();
     return res
         .clearCookie("jwt")
         .status(200)

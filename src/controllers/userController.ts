@@ -259,7 +259,6 @@ export async function logoutUser(
   res: Response,
   next: NextFunction
 ) {
-  // const id = uuidv4();
   return res
     .clearCookie("jwt")
     .status(200)
