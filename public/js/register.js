@@ -2,7 +2,6 @@
 
 const register = async (formData) => {
   // alert(email, pass);
-  console.log(formData);
 
   try {
     const res = await axios({
@@ -11,8 +10,15 @@ const register = async (formData) => {
       data: formData,
     });
 
+    alert("Successfully register");
+    window.location.replace("login");
     console.log(res);
   } catch (error) {
+    if (error.response.data.Error) {
+      alert(error.response.data.Error);
+    } else if (error.response.data.msg) {
+      alert(error.response.data.msg);
+    }
     console.log(error.response.data);
   }
 };
