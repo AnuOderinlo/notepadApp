@@ -18,10 +18,17 @@ router.get("/", function (req, res, next) {
   });
 });
 
-router.get("/notes/:id", getNote);
-router.get("/notes", getAllNotes);
-router.post("/notes", auth, createNote);
-router.put("/notes/:id", auth, updateNote);
-router.delete("/notes/:id", auth, deleteNote);
+// router.get("/notes/:id", getNote);
+// router.get("/notes", getAllNotes);
+// router.post("/notes", auth, createNote);
+// router.put("/notes/:id", auth, updateNote);
+// router.delete("/notes/:id", auth, deleteNote);
+
+router.route("/notes").get(getAllNotes).post(auth, createNote);
+router
+  .route("/notes/:id")
+  .get(getNote)
+  .put(auth, updateNote)
+  .delete(auth, deleteNote);
 
 export default router;
