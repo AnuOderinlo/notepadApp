@@ -21,7 +21,9 @@ router.get("/register", getRegisterPage);
 router.get("/dashboard", auth, getDashboardPage);
 
 router.get("/add-note", getAddNotePage);
+
 router.get("/edit-note", getEditNotePage);
+
 router.get("/delete-note", getDeleteNotePage);
 
 export default router;

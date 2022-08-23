@@ -4,7 +4,7 @@ html(lang='en')
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width,initial-scale=1')
     meta(http-equiv='X-UA-Compatible' content='ie=edge')
-    title Sign Up Form by Colorlib
+    title Sign Up
     link(rel='stylesheet' href='css/material-design-iconic-font.min.css')
     link(rel='stylesheet' href='css/style2.css')
     meta(name='robots' content='noindex, follow')
@@ -18,6 +18,8 @@ html(lang='en')
         .container
           .signup-content
             .signup-form
+              p.error-msg(style="color:red;")
+              p.success-msg(style="color:green;")
               h2.form-title Sign up
               form.form.register-form#register-form(method='POST')
                 .form-group
@@ -50,19 +52,19 @@ html(lang='en')
                   br
                   textarea.address(name="address") 
                   
-                .form-group
-                  input#agree-term.agree-term(type='checkbox' name='agree-term')
-                  label.label-agree-term(for='agree-term')
-                    span
-                      span
-                    | I agree all statements in 
-                    a.term-service(href='#') Terms of service
+                //- .form-group
+                //-   input#agree-term.agree-term(type='checkbox' name='agree-term')
+                //-   label.label-agree-term(for='agree-term')
+                //-     span
+                //-       span
+                //-     | I agree all statements in 
+                //-     a.term-service(href='#') Terms of service
                 .form-group.form-button
                   input#signup.form-submit(type='submit' name='signup' value='Register')
             .signup-image
               figure
                 img(src='images/signup-image.jpg' alt='sing up image')
-              a.signup-image-link(href='login') I am already member
+              a.signup-image-link(href='login') I am already a member
       script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.js") 
       script(src="/js/register.js") 
     //
