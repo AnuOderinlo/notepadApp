@@ -18,6 +18,8 @@ html(lang='en')
         .container
           .signup-content
             .signup-form
+              p.error-msg(style="color:red;")
+              p.success-msg(style="color:green;")
               h2.form-title Sign up
               form.form.register-form#register-form(method='POST')
                 .form-group

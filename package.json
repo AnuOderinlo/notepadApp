@@ -7,7 +7,7 @@
     "start": "node ./bin/www",
     "dev": "ts-node-dev --respawn ./bin/www",
     "serve": "nodemon ./bin/www",
-    "compile": "tsc"
+    "compile": "tsc -w"
   },
   "dependencies": {
     "axios": "^0.27.2",

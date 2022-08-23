@@ -196,12 +196,22 @@ async function loginUser(req, res, next) {
         const User = (await userModel_1.UserSchema.findOne({
             where: { email: req.body.email },
         }));
+        if (!User) {
+            return res.status(401).json({
+                message: "User does not exist or Email is not correct",
+            });
+        }
         const { id } = User;
         const token = (0, utils_1.generateToken)({ id });
         const validUser = await bcryptjs_1.default.compare(req.body.password, User.password);
-        if (!validUser && req.body.email === User.email) {
-            res.status(401).json({
-                message: "Password or email is not correct",
+        if (!validUser) {
+            return res.status(401).json({
+                message: "Password is not correct",
+            });
+        }
+        else if (req.body.email !== User.email) {
+            return res.status(401).json({
+                message: "Email is not correct",
             });
         }
         if (validUser) {
@@ -221,7 +231,7 @@ async function loginUser(req, res, next) {
     }
     catch (err) {
         res.status(500).json({
-            msg: "failed to login",
+            message: "failed to login",
             route: "/login",
         });
     }

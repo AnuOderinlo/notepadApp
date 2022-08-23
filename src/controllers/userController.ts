@@ -221,13 +221,23 @@ export async function loginUser(
       where: { email: req.body.email },
     })) as unknown as { [key: string]: string };
 
+    if (!User) {
+      return res.status(401).json({
+        message: "User does not exist or Email is not correct",
+      });
+    }
+
     const { id } = User;
     const token = generateToken({ id });
     const validUser = await bcrypt.compare(req.body.password, User.password);
 
-    if (!validUser && req.body.email === User.email) {
-      res.status(401).json({
-        message: "Password or email is not correct",
+    if (!validUser) {
+      return res.status(401).json({
+        message: "Password is not correct",
+      });
+    } else if (req.body.email !== User.email) {
+      return res.status(401).json({
+        message: "Email is not correct",
       });
     }
 
@@ -248,7 +258,7 @@ export async function loginUser(
     }
   } catch (err) {
     res.status(500).json({
-      msg: "failed to login",
+      message: "failed to login",
       route: "/login",
     });
   }
