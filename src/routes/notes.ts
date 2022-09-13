@@ -9,19 +9,17 @@ import {
 import { auth } from "../middleware/authenticate";
 const router = express.Router();
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  // res.send("respond with a resource");
-  res.status(200).json({
-    status: "Success",
-    Message: "Successfully created a route",
-  });
-});
-
 router.get("/notes/:id", getNote);
-router.get("/notes", getAllNotes);
-router.post("/notes", auth, createNote);
-router.put("/notes/:id", auth, updateNote);
+// router.get("/notes", getAllNotes);
+// router.post("/notes", auth, createNote);
+router.patch("/notes/:id", auth, updateNote);
 router.delete("/notes/:id", auth, deleteNote);
+
+router.route("/notes").get(getAllNotes).post(auth, createNote);
+// router
+//   .route("/notes/:id")
+//   .get(getNote)
+//   .patch(auth, updateNote)
+//   .delete(auth, deleteNote);
 
 export default router;

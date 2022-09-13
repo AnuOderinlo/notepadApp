@@ -19,10 +19,10 @@ async function auth(req, res, next) {
             // return res.redirect("/dashboard");
         }
         else {
-            return res.redirect("/login");
-            // return res.status(401).json({
-            //   Error: "Kindly sign in as a user",
-            // });
+            // return res.redirect("/login");
+            return res.status(401).json({
+                Error: "Kindly sign in as a user",
+            });
         }
         // if the token is present in cookies
         let verified = jsonwebtoken_1.default.verify(token, secret);
@@ -32,7 +32,7 @@ async function auth(req, res, next) {
             });
         }
         const { id } = verified;
-        const user = await userModel_1.UserSchema.findOne({ where: { id } });
+        const user = await userModel_1.User.findById(id);
         if (!user) {
             return res.status(404).json({
                 Error: "User not verified",

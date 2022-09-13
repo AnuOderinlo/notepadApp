@@ -1,8 +1,15 @@
 // const axios = require("axios");
+const errorElement = document.querySelector(".error-msg");
+const successElement = document.querySelector(".success-msg");
+const errorMsg = (msg) => {
+  errorElement.innerHTML = msg;
+};
+const successMsg = (msg) => {
+  successElement.innerHTML = msg;
+};
 
 const register = async (formData) => {
   // alert(email, pass);
-  console.log(formData);
 
   try {
     const res = await axios({
@@ -10,10 +17,21 @@ const register = async (formData) => {
       url: "/users/users",
       data: formData,
     });
-
+    errorMsg("");
+    successMsg("Successfully register");
+    // alert("Successfully register");
+    setTimeout(() => {
+      window.location.replace("login");
+    }, 1000);
     console.log(res);
   } catch (error) {
-    console.log(error.response.data);
+    if (error.response.data.Error) {
+      errorMsg(error.response.data.Error);
+      // alert(error.response.data.Error);
+    } else if (error.response.data.msg) {
+      errorMsg(error.response.data.msg);
+      // alert(error.response.data.msg);
+    }
   }
 };
 

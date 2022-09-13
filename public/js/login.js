@@ -1,9 +1,10 @@
 // const axios = require("axios");
+const errorElement = document.querySelector(".error-msg");
+const errorMsg = (msg) => {
+  errorElement.innerHTML = msg;
+};
 
 const login = async (email, password) => {
-  // alert(email, pass);
-  console.log(email, password);
-
   try {
     const res = await axios({
       method: "POST",
@@ -14,11 +15,13 @@ const login = async (email, password) => {
       },
     });
 
-    alert("Successfully Logged in");
+    // alert("Successfully Logged in");
+    errorMsg("");
     window.location.replace("/dashboard");
-    console.log(res);
   } catch (error) {
-    console.log(error.response.data);
+    errorMsg(error.response.data?.Error || error.response.data?.message);
+    // alert(error.response.data?.Error || error.response.data.message);
+    console.log(error);
   }
 };
 

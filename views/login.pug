@@ -4,7 +4,7 @@ html(lang='en')
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width,initial-scale=1')
     meta(http-equiv='X-UA-Compatible' content='ie=edge')
-    title Sign Up Form by Colorlib
+    title Sign in
     link(rel='stylesheet' href='css/material-design-iconic-font.min.css')
     link(rel='stylesheet' href='css/style2.css')
     meta(name='robots' content='noindex, follow')
@@ -22,6 +22,7 @@ html(lang='en')
                 img(src='images/signin-image.jpg' alt='sing up image')
               a.signup-image-link(href='register') Create an account
             .signin-form
+              p.error-msg(style="color:red;")
               h2.form-title Log in
               form.form.register-form#login-form(method='POST')
                 .form-group
@@ -40,18 +41,18 @@ html(lang='en')
                     | Remember me
                 .form-group.form-button
                   input#signin.form-submit(type='submit' name='signin' value='Log in')
-              .social-login
-                span.social-label Or login with
-                ul.socials
-                  li
-                    a(href='#')
-                      i.display-flex-center.zmdi.zmdi-facebook
-                  li
-                    a(href='#')
-                      i.display-flex-center.zmdi.zmdi-twitter
-                  li
-                    a(href='#')
-                      i.display-flex-center.zmdi.zmdi-google
+              //- .social-login
+              //-   span.social-label Or login with
+              //-   ul.socials
+              //-     li
+              //-       a(href='#')
+              //-         i.display-flex-center.zmdi.zmdi-facebook
+              //-     li
+              //-       a(href='#')
+              //-         i.display-flex-center.zmdi.zmdi-twitter
+              //-     li
+              //-       a(href='#')
+              //-         i.display-flex-center.zmdi.zmdi-google
 
       script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.2/axios.js") 
       script(src="/js/login.js") 
