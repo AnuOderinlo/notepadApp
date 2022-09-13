@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuidv4 } from "uuid";
-import { NoteSchema } from "../models/noteModel";
-import { UserSchema } from "../models/userModel";
+import { Note } from "../models/noteModel";
+// import { UserSchema } from "../models/userModel";
 import {
   createNotesSchema,
   updateNotesSchema,
@@ -20,6 +20,7 @@ export async function createNote(
   // let todo = {...req.body, id}
   try {
     const verified = req.user;
+    const userId = verified.id;
 
     const validationResult = createNotesSchema.validate(req.body, options);
     if (validationResult.error) {
@@ -27,20 +28,17 @@ export async function createNote(
         Error: validationResult.error.details[0].message,
       });
     }
-    const record = await NoteSchema.create({
-      id,
-      ...req.body,
-      user_id: verified.id,
-    });
+    const newNote = await Note.create({ owner: userId, ...req.body });
+    // const record = await newNote.save();
     res.status(201).json({
-      msg: "Successfully created a note",
-      record,
+      message: "Successfully created a note",
+      newNote,
     });
   } catch (err) {
     console.log(err);
 
     res.status(500).json({
-      msg: "failed to create",
+      message: "failed to create",
       route: "/create",
     });
   }
@@ -54,30 +52,17 @@ export async function getAllNotes(
   next: NextFunction
 ) {
   try {
-    const limit = req.query?.limit as number | undefined;
-    const offset = req.query?.offset as number | undefined;
-    //  const record = await NoteSchema.findAll({where: {},limit, offset})
-    const record = await NoteSchema.findAndCountAll({
-      limit,
-      offset,
-      include: [
-        {
-          model: UserSchema,
-          attributes: ["id", "fullname", "email", "phone"],
-          as: "users",
-        },
-      ],
-    });
-    return res.status(200).json({
+    const notes = await Note.find({});
+
+    res.status(200).json({
       status: "success",
       message: "You have successfully fetch all notes",
-      count: record.count,
-      record: record.rows,
+      notes,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      msg: "failed to read",
+      message: "failed to read",
       route: "/read",
     });
   }
@@ -86,14 +71,14 @@ export async function getAllNotes(
 export async function getNote(req: Request, res: Response, next: NextFunction) {
   try {
     const { id } = req.params;
-    const record = await NoteSchema.findOne({ where: { id } });
+    const note = await Note.findById(id);
     return res.status(200).json({
-      msg: "Successfully read a note",
-      record,
+      message: "Successfully read a note",
+      note,
     });
   } catch (error) {
     return res.status(500).json({
-      msg: "failed to read single todo",
+      message: "failed to read single note",
       route: "/read/:id",
     });
   }
@@ -106,7 +91,7 @@ export async function updateNote(
 ) {
   try {
     const { id } = req.params;
-    const { title, description, dueDate, status } = req.body;
+
     const validationResult = updateNotesSchema.validate(req.body, options);
     if (validationResult.error) {
       return res.status(400).json({
@@ -114,22 +99,20 @@ export async function updateNote(
       });
     }
 
-    const record = await NoteSchema.findOne({ where: { id } });
-    if (!record) {
+    const note = await Note.findById(id);
+    if (!note) {
       return res.status(404).json({
         Error: "Note does not exist",
       });
     }
-    const updatedrecord = await record.update({
-      title: title,
-      description: description,
-      dueDate: dueDate,
-      status: status,
+    const updateNote = await Note.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
     });
     res.status(200).json({
       status: "success",
       message: "You have successfully updated your note",
-      updatedrecord,
+      updateNote,
     });
   } catch (error) {
     res.status(500).json({
@@ -146,13 +129,13 @@ export async function deleteNote(
 ) {
   try {
     const { id } = req.params;
-    const record = await NoteSchema.findOne({ where: { id } });
+    const record = await Note.findById(id);
     if (!record) {
       return res.status(404).json({
         message: "Cannot find Note",
       });
     }
-    const deletedRecord = await record.destroy();
+    const deletedRecord = await Note.findByIdAndDelete(id);
     return res.status(200).json({
       status: "success",
       message: "Note deleted successfully",

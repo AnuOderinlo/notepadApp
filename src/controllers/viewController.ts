@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { NoteSchema } from "../models/noteModel";
+import { Note } from "../models/noteModel";
 
 // Get home page
 export async function getHomePage(
@@ -8,7 +8,7 @@ export async function getHomePage(
   next: NextFunction
 ) {
   // Get all notes from db
-  const notes = await NoteSchema.findAll();
+  const notes = await Note.find({});
 
   res.status(200).render("index", {
     title: "All notes",
@@ -25,11 +25,7 @@ export async function getDashboardPage(
   const verified = req.user;
   console.log(verified.id);
 
-  const notes = await NoteSchema.findAll({
-    where: {
-      user_id: verified.id,
-    },
-  });
+  const notes = await Note.find({ owner: verified.id }).exec();
   res.status(200).render("dashboard", {
     title: "All notes",
     notes,
@@ -71,7 +67,7 @@ export async function getEditNotePage(
   const { id } = req.query;
   // console.log(req.query.id);
 
-  const note = await NoteSchema.findOne({ where: { id } });
+  const note = await Note.findById(id);
   // console.log(note);
 
   res.status(200).render("editNote", {
@@ -88,7 +84,7 @@ export async function getDeleteNotePage(
   const { id } = req.query;
   // console.log(req.query.id);
 
-  const note = await NoteSchema.findOne({ where: { id } });
+  const note = await Note.findById(id);
   res.status(200).render("deleteNote", {
     title: "All notes",
     note,

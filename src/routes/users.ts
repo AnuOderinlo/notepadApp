@@ -23,12 +23,12 @@ router.get("/", function (req, res, next) {
 // router.get("/users/:id", getUser);
 // router.get("/users", getAllUsers);
 // router.post("/users", createUser);
-// router.put("/users/:id", updateUser);
+// router.patch("/users/:id", updateUser);
 // router.delete("/users/:id", deleteUser);
 router.post("/login", loginUser);
 router.get("/logout", auth, logoutUser);
 
 router.route("/users").get(getAllUsers).post(createUser);
-router.route("/users:id").get(getUser).put(updateUser).delete(deleteUser);
+router.route("/users/:id").get(getUser).patch(updateUser).delete(deleteUser);
 
 export default router;

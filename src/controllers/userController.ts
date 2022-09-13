@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuidv4 } from "uuid";
-import { UserSchema } from "../models/userModel";
+import { User } from "../models/userModel";
 import {
   registerUserSchema,
   loginSchema,
@@ -8,6 +8,7 @@ import {
   options,
 } from "../utility/utils";
 import bcrypt from "bcryptjs";
+import mongoose, { Mongoose } from "mongoose";
 
 /**
  * Create User API
@@ -20,10 +21,6 @@ export async function createUser(
   res: Response,
   next: NextFunction
 ) {
-  const id = uuidv4();
-
-  // console.log(req.body);
-
   try {
     const validationResult = registerUserSchema.validate(req.body, options);
     if (validationResult.error) {
@@ -31,19 +28,16 @@ export async function createUser(
         Error: validationResult.error.details[0].message,
       });
     }
-    const duplicateEmail = await UserSchema.findOne({
-      where: { email: req.body.email },
-    });
+
+    const duplicateEmail = await User.findOne({ email: req.body.email }).exec();
 
     if (duplicateEmail) {
       return res.status(409).json({
-        msg: "Email is used, please change email",
+        message: "Email is used, please change email",
       });
     }
 
-    const duplicatePhone = await UserSchema.findOne({
-      where: { phone: req.body.phone },
-    });
+    const duplicatePhone = await User.findOne({ phone: req.body.phone }).exec();
 
     if (duplicatePhone) {
       return res.status(409).json({
@@ -54,7 +48,6 @@ export async function createUser(
     const passwordHash = await bcrypt.hash(req.body.password, 8);
     const ConfirmPasswordHash = await bcrypt.hash(req.body.confirm_password, 8);
     const userData = {
-      id,
       fullname: req.body.fullname,
       email: req.body.email,
       gender: req.body.gender,
@@ -64,10 +57,13 @@ export async function createUser(
       confirm_password: ConfirmPasswordHash,
     };
 
-    const userDetails = await UserSchema.create(userData);
+    const userDetails = await User.create(userData);
+    const id = userDetails._id;
 
-    // const id = userDetails?.id;
     const token = generateToken({ id });
+
+    console.log(`The user ID is ${id}`);
+
     res.status(201).json({
       status: "Success",
       token,
@@ -96,7 +92,7 @@ export async function getAllUsers(
   next: NextFunction
 ) {
   try {
-    const userDetails = await UserSchema.findAll();
+    const userDetails = await User.find({});
     res.status(201).json({
       status: "Success",
       message: "Successfully get all users",
@@ -120,17 +116,18 @@ export async function getUser(req: Request, res: Response, next: NextFunction) {
   const { id } = req.params;
 
   try {
-    const userDetails = await UserSchema.findOne({ where: { id } });
+    const userDetails = await User.findById(id);
 
     res.status(201).json({
       status: "Success",
-      message: "Successfully get all users",
+      message: "Successfully get a user",
       data: userDetails,
     });
   } catch (error) {
     res.status(500).json({
       status: "Failed",
-      Message: "Something went all",
+      // Message: "Something went all",
+      Message: error,
     });
   }
 }
@@ -148,15 +145,12 @@ export async function updateUser(
 ) {
   try {
     const { id } = req.params;
-    const userDetails = await UserSchema.findOne({ where: { id } });
-    const { fullname, email, gender, phone, address } = req.body;
+    const userDetails = await User.findById(id);
+    // const { fullname, email, gender, phone, address } = req.body;
     if (userDetails) {
-      const userUpdate = await userDetails.update({
-        fullname: fullname || userDetails.getDataValue("fullname"),
-        email: email || userDetails.getDataValue("email"),
-        gender: gender || userDetails.getDataValue("gender"),
-        phone: phone || userDetails.getDataValue("phone"),
-        address: address || userDetails.getDataValue("address"),
+      const userUpdate = await User.findByIdAndUpdate(id, req.body, {
+        new: true,
+        runValidators: true,
       });
       res.status(201).json({
         status: "Success",
@@ -178,19 +172,26 @@ export async function updateUser(
 }
 
 export async function deleteUser(req: Request, res: Response) {
-  const { id } = req.params;
-  const userDetails = await UserSchema.findOne({ where: { id } });
-  if (!userDetails) {
-    res.json({
-      status: "failed",
-      message: "User not found",
-    });
-  } else {
-    const deletedUser = await userDetails.destroy();
-    res.status(201).json({
-      status: "Success",
-      message: "Successfully Deleted a user",
-      data: deletedUser,
+  try {
+    const { id } = req.params;
+    const userDetails = await User.findById(id);
+    if (!userDetails) {
+      res.status(404).json({
+        status: "failed",
+        message: "Can't find user",
+      });
+    } else {
+      const deletedUser = await User.findByIdAndDelete(id);
+      res.status(203).json({
+        status: "Success",
+        message: "Successfully Deleted a user",
+        data: deletedUser,
+      });
+    }
+  } catch (error) {
+    res.status(500).json({
+      status: "Failed",
+      Message: "Unable to delete User",
     });
   }
 }
@@ -217,31 +218,32 @@ export async function loginUser(
       });
     }
 
-    const User = (await UserSchema.findOne({
-      where: { email: req.body.email },
-    })) as unknown as { [key: string]: string };
+    const user = await User.findOne({ email: req.body.email }).exec();
 
-    if (!User) {
+    if (!user) {
       return res.status(401).json({
         message: "User does not exist or Email is not correct",
       });
     }
 
-    const { id } = User;
+    const { id } = user;
     const token = generateToken({ id });
-    const validUser = await bcrypt.compare(req.body.password, User.password);
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
 
-    if (!validUser) {
+    if (!validPassword) {
       return res.status(401).json({
         message: "Password is not correct",
       });
-    } else if (req.body.email !== User.email) {
+    } else if (req.body.email !== user.email) {
       return res.status(401).json({
         message: "Email is not correct",
       });
     }
 
-    if (validUser) {
+    if (validPassword) {
       console.log(req.cookies);
 
       return res
@@ -253,7 +255,7 @@ export async function loginUser(
         .json({
           message: "Successfully logged in",
           token,
-          User,
+          user,
         });
     }
   } catch (err) {

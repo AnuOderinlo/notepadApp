@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { UserSchema } from "../models/userModel";
+import { User } from "../models/userModel";
 
 const secret = process.env.JWT_SECRET as string;
 export async function auth(
@@ -18,10 +18,10 @@ export async function auth(
       token = req.cookies.jwt;
       // return res.redirect("/dashboard");
     } else {
-      return res.redirect("/login");
-      // return res.status(401).json({
-      //   Error: "Kindly sign in as a user",
-      // });
+      // return res.redirect("/login");
+      return res.status(401).json({
+        Error: "Kindly sign in as a user",
+      });
     }
 
     // if the token is present in cookies
@@ -35,7 +35,7 @@ export async function auth(
     }
     const { id } = verified as { [key: string]: string };
 
-    const user = await UserSchema.findOne({ where: { id } });
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(404).json({

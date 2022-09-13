@@ -18,10 +18,10 @@ router.get("/", function (req, res, next) {
 // router.get("/users/:id", getUser);
 // router.get("/users", getAllUsers);
 // router.post("/users", createUser);
-// router.put("/users/:id", updateUser);
+// router.patch("/users/:id", updateUser);
 // router.delete("/users/:id", deleteUser);
 router.post("/login", userController_1.loginUser);
 router.get("/logout", authenticate_1.auth, userController_1.logoutUser);
 router.route("/users").get(userController_1.getAllUsers).post(userController_1.createUser);
-router.route("/users:id").get(userController_1.getUser).put(userController_1.updateUser).delete(userController_1.deleteUser);
+router.route("/users/:id").get(userController_1.getUser).patch(userController_1.updateUser).delete(userController_1.deleteUser);
 exports.default = router;
